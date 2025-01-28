@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService implements ICategoryService {
@@ -38,9 +39,14 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public ResponseEntity<Category> update(Long id, Category category) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(categoryRepository.save(category));
+        return categoryRepository.findById(id)
+                .map(existingCategory -> {
+                    category.setId(id);
+                    return ResponseEntity.ok(categoryRepository.save(category));
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()); // Si no se encuentra, retornamos 404
     }
+
 
     @Override
     public void delete(Long id) {

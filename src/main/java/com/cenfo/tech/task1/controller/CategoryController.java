@@ -23,6 +23,7 @@ public class CategoryController {
     }
 
     @GetMapping
+    @ResponseBody
     public ResponseEntity<List<Category>> getAllCategories() {
         return categoryService.getAll();
     }
@@ -39,6 +40,7 @@ public class CategoryController {
         return categoryService.update(id, category);
     }
 
+  //  @PreAuthorize("hasAuthority('SUPER-ADMIN-ROLE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.delete(id);

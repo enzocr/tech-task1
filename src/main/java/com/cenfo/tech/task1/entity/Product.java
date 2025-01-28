@@ -1,8 +1,10 @@
 package com.cenfo.tech.task1.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class Product {
 
     @Id
