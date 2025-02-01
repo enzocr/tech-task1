@@ -15,4 +15,8 @@ public class Category {
 
     private String description;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

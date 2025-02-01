@@ -3,6 +3,7 @@ package com.cenfo.tech.task1.controller;
 import com.cenfo.tech.task1.entity.Product;
 import com.cenfo.tech.task1.services.IProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,33 +18,33 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Endpoint para registrar un producto
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping
     public ResponseEntity<Product> registerProduct(@RequestBody Product product) {
         return productService.register(product);
     }
 
-    // Endpoint para obtener todos los productos
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     @ResponseBody
     public ResponseEntity<List<Product>> getAllProducts() {
         return productService.getAll();
     }
 
-    // Endpoint para obtener un producto por ID
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
+    @ResponseBody
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         return productService.getById(id);
     }
 
-    // Endpoint para actualizar un producto
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         return productService.update(id, product);
     }
 
-
-//    @PreAuthorize("hasAuthority('SUPER-ADMIN-ROLE')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.delete(id);
