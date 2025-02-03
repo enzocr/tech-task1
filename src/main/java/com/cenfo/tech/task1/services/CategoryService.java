@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class CategoryService implements ICategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Category> register(Category category) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -37,6 +39,7 @@ public class CategoryService implements ICategoryService {
                 .body(categoryRepository.findById(id).orElse(null));
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Category> update(Long id, Category category) {
         return categoryRepository.findById(id)

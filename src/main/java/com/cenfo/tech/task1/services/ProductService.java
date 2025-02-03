@@ -5,6 +5,7 @@ import com.cenfo.tech.task1.repository.IProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,8 +18,10 @@ public class ProductService implements IProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Product> register(Product product) {
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productRepository.save(product));
     }
@@ -35,10 +38,16 @@ public class ProductService implements IProductService {
                 .body(productRepository.findById(id).orElse(null));
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Product> update(Long id, Product product) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productRepository.save(product));
+
+        return productRepository.findById(id)
+                .map(existingProduct -> {
+                    product.setId(id);
+                    return ResponseEntity.ok(productRepository.save(product));
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @Override
