@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
+public class UserSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     private final IRoleRepository roleRepository;
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AdminSeeder(IRoleRepository roleRepository, IUserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserSeeder(IRoleRepository roleRepository, IUserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
