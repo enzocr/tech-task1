@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users/logIn").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products", "/api/categories").hasRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/products", "/api/categories").hasRole("SUPER_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

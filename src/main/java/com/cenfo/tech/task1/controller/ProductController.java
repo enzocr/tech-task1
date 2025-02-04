@@ -28,14 +28,16 @@ public class ProductController {
         return productService.register(product);
     }
 
-    @PreAuthorize("isAuthenticated()")
+
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping
     @ResponseBody
     public ResponseEntity<List<Product>> getAllProducts() {
         return productService.getAll();
     }
 
-    @PreAuthorize("isAuthenticated()")
+
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {

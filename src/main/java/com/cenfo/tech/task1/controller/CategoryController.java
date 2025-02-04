@@ -25,21 +25,21 @@ public class CategoryController {
         return categoryService.register(category);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping
     @ResponseBody
     public ResponseEntity<List<Category>> getAllCategories() {
         return categoryService.getAll();
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
         return categoryService.getById(id);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping("/products/{categoryId}")
     @ResponseBody
     public ResponseEntity<List<Product>> getAllProductsByCategory(@PathVariable Long categoryId) {
