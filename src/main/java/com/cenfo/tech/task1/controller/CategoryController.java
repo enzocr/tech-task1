@@ -1,6 +1,7 @@
 package com.cenfo.tech.task1.controller;
 
 import com.cenfo.tech.task1.entity.Category;
+import com.cenfo.tech.task1.entity.Product;
 import com.cenfo.tech.task1.services.ICategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +39,12 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/products/{categoryId}")
+    @ResponseBody
+    public ResponseEntity<List<Product>> getAllProductsByCategory(@PathVariable Long categoryId) {
+        return categoryService.getAllProductsByCategory(categoryId);
+    }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/{id}")

@@ -1,13 +1,14 @@
 package com.cenfo.tech.task1.services;
 
 import com.cenfo.tech.task1.entity.Category;
+import com.cenfo.tech.task1.entity.Product;
 import com.cenfo.tech.task1.repository.ICategoryRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,13 @@ public class CategoryService implements ICategoryService {
     public ResponseEntity<Category> getById(Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoryRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public ResponseEntity<List<Product>> getAllProductsByCategory(Long id) {
+        return categoryRepository.findById(id)
+                .map(category -> ResponseEntity.ok(category.getProducts()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList()));  // Responde con NOT_FOUND si no se encuentra
     }
 
     @Transactional
