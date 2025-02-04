@@ -1,4 +1,4 @@
-package com.cenfo.tech.task1.security;
+package com.cenfo.tech.task1.services.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

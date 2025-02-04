@@ -1,7 +1,7 @@
 package com.cenfo.tech.task1.controller;
 
 import com.cenfo.tech.task1.entity.Product;
-import com.cenfo.tech.task1.services.IProductService;
+import com.cenfo.tech.task1.services.product.IProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -2,7 +2,7 @@ package com.cenfo.tech.task1.controller;
 
 import com.cenfo.tech.task1.entity.Category;
 import com.cenfo.tech.task1.entity.Product;
-import com.cenfo.tech.task1.services.ICategoryService;
+import com.cenfo.tech.task1.services.category.ICategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

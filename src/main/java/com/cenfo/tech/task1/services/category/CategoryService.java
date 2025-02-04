@@ -1,4 +1,4 @@
-package com.cenfo.tech.task1.services;
+package com.cenfo.tech.task1.services.category;
 
 import com.cenfo.tech.task1.entity.Category;
 import com.cenfo.tech.task1.entity.Product;
@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryService implements ICategoryService {

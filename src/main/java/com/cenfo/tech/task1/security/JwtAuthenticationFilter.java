@@ -1,5 +1,6 @@
 package com.cenfo.tech.task1.security;
 
+import com.cenfo.tech.task1.services.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.cenfo.tech.task1.services;
+package com.cenfo.tech.task1.services.user;
 
 import com.cenfo.tech.task1.entity.Role;
 import com.cenfo.tech.task1.entity.RoleEnum;

@@ -1,4 +1,4 @@
-package com.cenfo.tech.task1.services;
+package com.cenfo.tech.task1.services.category;
 
 import com.cenfo.tech.task1.entity.Category;
 import com.cenfo.tech.task1.entity.Product;

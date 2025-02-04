@@ -1,4 +1,4 @@
-package com.cenfo.tech.task1.security;
+package com.cenfo.tech.task1.services.security;
 
 import com.cenfo.tech.task1.entity.User;
 import com.cenfo.tech.task1.repository.IUserRepository;

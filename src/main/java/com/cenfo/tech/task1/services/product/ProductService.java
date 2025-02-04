@@ -1,4 +1,4 @@
-package com.cenfo.tech.task1.services;
+package com.cenfo.tech.task1.services.product;
 
 import com.cenfo.tech.task1.entity.Product;
 import com.cenfo.tech.task1.repository.IProductRepository;
