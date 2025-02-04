@@ -19,6 +19,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final String SUPER_ADMIN = "SUPER_ADMIN";
+    private final String USER = "USER";
+
+    private final String LOG_IN_URI = "/api/users/logIn";
+    private final String BASE_URI_PRODUCTS = "/api/products";
+    private final String BASE_URI_CATEGORIES = "/api/categories";
+
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -32,11 +39,11 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/products", "/api/categories").hasRole("SUPER_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/users/logIn").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/products", "/api/categories").hasRole("SUPER_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/products", "/api/categories").hasRole("SUPER_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/products", "/api/categories").hasAnyRole("SUPER_ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, LOG_IN_URI).permitAll()
+                        .requestMatchers(HttpMethod.POST, BASE_URI_PRODUCTS).hasRole(SUPER_ADMIN)
+                        .requestMatchers(HttpMethod.PUT, BASE_URI_PRODUCTS, BASE_URI_CATEGORIES).hasRole(SUPER_ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, BASE_URI_PRODUCTS, BASE_URI_CATEGORIES).hasRole(SUPER_ADMIN)
+                        .requestMatchers(HttpMethod.GET, BASE_URI_PRODUCTS, BASE_URI_CATEGORIES).hasAnyRole(SUPER_ADMIN, USER)
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

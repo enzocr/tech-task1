@@ -43,7 +43,7 @@ public class CategoryService implements ICategoryService {
     public ResponseEntity<List<Product>> getAllProductsByCategory(Long id) {
         return categoryRepository.findById(id)
                 .map(category -> ResponseEntity.ok(category.getProducts()))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList()));  // Responde con NOT_FOUND si no se encuentra
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList()));
     }
 
     @Transactional
@@ -54,7 +54,7 @@ public class CategoryService implements ICategoryService {
                     category.setId(id);
                     return ResponseEntity.ok(categoryRepository.save(category));
                 })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()); // Si no se encuentra, retornamos 404
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
 

@@ -6,6 +6,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 public interface IUserService {
-    public ResponseEntity<?> register(User user);
+    ResponseEntity<?> register(User user);
     Optional<User> findByEmail(String email);
 }

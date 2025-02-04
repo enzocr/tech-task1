@@ -23,27 +23,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public <T> ResponseEntity<T> handleEntityNotFoundException(EntityNotFoundException ex) {
-        // Log the exception
         logger.error("Entity not found: {}", ex.getMessage(), ex);
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public <T> ResponseEntity<T> handleIllegalArgumentException(IllegalArgumentException ex) {
-        // Log the exception
         logger.error("Invalid argument: {}", ex.getMessage(), ex);
-
-        // Returning null in the body with a BAD_REQUEST status
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @ExceptionHandler(Exception.class)
     public <T> ResponseEntity<T> handleGlobalException(Exception ex) {
-        // Log the exception
         logger.error("Internal server error: {}", ex.getMessage(), ex);
-
-        // Returning null in the body with an INTERNAL_SERVER_ERROR status
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 
@@ -65,6 +57,7 @@ public class GlobalExceptionHandler {
         logger.error("Json mapping error: {}", ex.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<Map<String, String>> handleExpiredJwtException(ExpiredJwtException ex) {
         Map<String, String> errorDetails = new HashMap<>();
