@@ -1,9 +1,10 @@
 package com.cenfo.tech.task1.controller;
 
+import com.cenfo.tech.task1.entity.Category;
 import com.cenfo.tech.task1.entity.Product;
-import com.cenfo.tech.task1.response.dto.ProductDTO;
 import com.cenfo.tech.task1.response.http.GlobalHandlerResponse;
 import com.cenfo.tech.task1.response.http.MetaResponse;
+import com.cenfo.tech.task1.services.category.ICategoryService;
 import com.cenfo.tech.task1.services.product.IProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
@@ -11,34 +12,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import request.RequestUpdateProduct;
+import request.RequestProduct;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
     private final IProductService productService;
+    private final ICategoryService categoryService;
 
-    public ProductController(IProductService productService) {
+    public ProductController(IProductService productService, ICategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping
-    public ResponseEntity<?> registerProduct(@RequestBody Product product, HttpServletRequest request) {
-        if (product.getCategory() == null || product.getCategory().getId() == null) {
-            return new GlobalHandlerResponse().handleResponse(
-                    HttpStatus.BAD_REQUEST.name(),
-                    "Product category or category ID is required",
-                    HttpStatus.BAD_REQUEST,
-                    request
-            );
-        }
-
-        ProductDTO productDTO = productService.register(product);
+    public ResponseEntity<?> registerProduct(@RequestBody RequestProduct requestProduct,
+                                             HttpServletRequest request) {
         return new GlobalHandlerResponse().handleResponse(
                 HttpStatus.CREATED.name(),
-                productDTO,
+                productService.register(buildProductDTO(requestProduct)),
                 HttpStatus.CREATED,
                 request
         );
@@ -67,10 +61,12 @@ public class ProductController {
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody RequestUpdateProduct product, HttpServletRequest request) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id,
+                                           @RequestBody RequestProduct requestProduct,
+                                           HttpServletRequest request) {
         return new GlobalHandlerResponse().handleResponse(
                 HttpStatus.OK.name(),
-                productService.update(id, product),
+                productService.update(id, buildProductDTO(requestProduct)),
                 HttpStatus.OK, request);
     }
 
@@ -97,5 +93,19 @@ public class ProductController {
 
         return new GlobalHandlerResponse().handleResponse(
                 HttpStatus.OK.name(), page.getContent(), HttpStatus.OK, metaResponse, request);
+    }
+
+    private Product buildProductDTO(RequestProduct requestProduct) {
+        Category category = null;
+        if (requestProduct.categoryId() != null) {
+            category = categoryService.getById(requestProduct.categoryId());
+        }
+        Product product = new Product();
+        product.setName(requestProduct.name());
+        product.setDescription(requestProduct.description());
+        product.setPrice(requestProduct.price());
+        product.setStockQuantity(requestProduct.stockQuantity());
+        product.setCategory(category);
+        return product;
     }
 }

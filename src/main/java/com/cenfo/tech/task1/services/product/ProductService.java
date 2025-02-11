@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import request.RequestUpdateProduct;
 
 import java.util.Optional;
 
@@ -58,16 +57,14 @@ public class ProductService implements IProductService {
 
     @Transactional
     @Override
-    public ProductDTO update(Long id, RequestUpdateProduct productNewInfo) {
+    public ProductDTO update(Long id, Product productNewInfo) {
         Product productToUpdate = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
-
-        productToUpdate.setName(productNewInfo.name());
-        productToUpdate.setDescription(productNewInfo.description());
-        productToUpdate.setPrice(productNewInfo.price());
-        productToUpdate.setStockQuantity(productNewInfo.stockQuantity());
-
-        return UtilsDTO.toProductDTO(productRepository.save(productToUpdate));
+        productNewInfo.setId(id);
+        if (productNewInfo.getCategory() == null) {
+            productNewInfo.setCategory(productToUpdate.getCategory());
+        }
+        return UtilsDTO.toProductDTO(productRepository.save(productNewInfo));
     }
 
     @Override

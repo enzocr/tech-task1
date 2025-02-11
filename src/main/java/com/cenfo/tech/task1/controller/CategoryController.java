@@ -43,7 +43,7 @@ public class CategoryController {
     public ResponseEntity<?> getCategoryById(@PathVariable Long id, HttpServletRequest request) {
         return new GlobalHandlerResponse().handleResponse(
                 HttpStatus.OK.name(),
-                categoryService.getById(id),
+                categoryService.getByIdDTO(id),
                 HttpStatus.OK, request);
     }
 

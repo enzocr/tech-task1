@@ -10,11 +10,13 @@ public interface ICategoryService {
 
     CategoryDTO register(Category category);
 
-    Page<Category>  getAll(int page, int size);
+    Page<Category> getAll(int page, int size);
 
     Page<Product> getAllProductsByCategory(Long id, int page, int size);
 
-    CategoryDTO getById(Long id);
+    CategoryDTO getByIdDTO(Long id);
+
+    Category getById(Long id);
 
     CategoryDTO update(Long id, RequestUpdateCategory categoryNewInfo);
 

@@ -49,10 +49,15 @@ public class CategoryService implements ICategoryService {
 
 
     @Override
-    public CategoryDTO getById(Long id) {
+    public CategoryDTO getByIdDTO(Long id) {
+        return UtilsDTO.toCategoryDTO(getById(id));
+    }
+
+    @Override
+    public Category getById(Long id) {
         return categoryRepository.findById(id)
-                .map(UtilsDTO::toCategoryDTO)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.cenfo.tech.task1.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class Product {
 
     private Integer stockQuantity;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
