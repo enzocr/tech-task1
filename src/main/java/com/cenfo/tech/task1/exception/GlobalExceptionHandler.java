@@ -1,20 +1,17 @@
 package com.cenfo.tech.task1.exception;
 
 
+import com.cenfo.tech.task1.response.http.GlobalHandlerResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -22,49 +19,40 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public <T> ResponseEntity<T> handleEntityNotFoundException(EntityNotFoundException ex) {
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request) {
         logger.error("Entity not found: {}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return new GlobalHandlerResponse().handleResponse("Content not found", HttpStatus.NOT_FOUND, request);
+
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public <T> ResponseEntity<T> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request) {
         logger.error("Invalid argument: {}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        return new GlobalHandlerResponse().handleResponse("An error has occurred", HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(Exception.class)
-    public <T> ResponseEntity<T> handleGlobalException(Exception ex) {
+    public ResponseEntity<?> handleGlobalException(Exception ex, HttpServletRequest request) {
         logger.error("Internal server error: {}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String message = error.getDefaultMessage();
-            errors.put(fieldName, message);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new GlobalHandlerResponse().handleResponse("An error has occurred", HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(JsonMappingException.class)
-    public ResponseEntity<Map<String, String>> handleJsonMappingException(JsonMappingException ex) {
-        Map<String, String> errorDetails = new HashMap<>();
-        errorDetails.put("error", "Invalid request data. Please ensure all fields are correct and follow the expected format.");
+    public ResponseEntity<?> handleJsonMappingException(JsonMappingException ex, HttpServletRequest request) {
         logger.error("Json mapping error: {}", ex.getMessage());
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new GlobalHandlerResponse().handleResponse("Invalid request data. Please ensure all fields are correct and follow the expected format.", HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<Map<String, String>> handleExpiredJwtException(ExpiredJwtException ex) {
-        Map<String, String> errorDetails = new HashMap<>();
-        errorDetails.put("error", "Token expired");
+    public ResponseEntity<?> handleExpiredJwtException(ExpiredJwtException ex, HttpServletRequest request) {
         logger.error("Expired JWT error: {}", ex.getMessage());
-        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+        return new GlobalHandlerResponse().handleResponse("Token expired.", HttpStatus.UNAUTHORIZED, request);
     }
 
-
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
+        logger.error("Error occurred: {}", ex.getMessage(), ex);
+        return new GlobalHandlerResponse().handleResponse("An unexpected error occurred while registering the entity.", HttpStatus.INTERNAL_SERVER_ERROR,
+                request);
+    }
 }

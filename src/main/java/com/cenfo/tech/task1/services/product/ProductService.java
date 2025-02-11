@@ -2,12 +2,15 @@ package com.cenfo.tech.task1.services.product;
 
 import com.cenfo.tech.task1.entity.Product;
 import com.cenfo.tech.task1.repository.IProductRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cenfo.tech.task1.response.dto.ProductDTO;
+import com.cenfo.tech.task1.utils.UtilsDTO;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService implements IProductService {
@@ -20,38 +23,49 @@ public class ProductService implements IProductService {
 
     @Transactional
     @Override
-    public ResponseEntity<Product> register(Product product) {
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productRepository.save(product));
+    public ProductDTO register(Product product) {
+        try {
+            return UtilsDTO.toProductDTO(productRepository.save(product));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public ResponseEntity<List<Product>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productRepository.findAll());
+    public Page<Product> getAll(int page, int size) {
+        Page<Product> productPage = productRepository.findAll(PageRequest.of(page, size));
+        if (productPage.isEmpty()) {
+            throw new EntityNotFoundException("No products found on page " + page + " with size " + size);
+        }
+        return productPage;
     }
 
     @Override
-    public ResponseEntity<Product> getById(Long id) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productRepository.findById(id).orElse(null));
+    public ProductDTO getById(Long id) {
+        return productRepository.findById(id)
+                .map(UtilsDTO::toProductDTO)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
     }
 
     @Transactional
     @Override
-    public ResponseEntity<Product> update(Long id, Product product) {
-
-        return productRepository.findById(id)
-                .map(existingProduct -> {
-                    product.setId(id);
-                    return ResponseEntity.ok(productRepository.save(product));
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ProductDTO update(Long id, Product product) {
+        if (productRepository.findById(id).isPresent()) {
+            product.setId(id);
+            return UtilsDTO.toProductDTO(productRepository.save(product));
+        } else throw new EntityNotFoundException("Product not found with id: " + id);
     }
 
     @Override
     public void delete(Long id) {
-        productRepository.deleteById(id);
+        Optional.of(productRepository.findById(id))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .ifPresentOrElse(
+                        product -> productRepository.deleteById(id),
+                        () -> {
+                            throw new EntityNotFoundException("Product not found with id: " + id);
+                        }
+                );
     }
 }

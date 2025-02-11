@@ -2,7 +2,7 @@ package com.cenfo.tech.task1.controller;
 
 
 import com.cenfo.tech.task1.entity.User;
-import com.cenfo.tech.task1.response.LogInResponse;
+import com.cenfo.tech.task1.response.http.LogInResponse;
 import com.cenfo.tech.task1.services.security.AuthService;
 import com.cenfo.tech.task1.services.security.JwtService;
 import org.springframework.http.ResponseEntity;

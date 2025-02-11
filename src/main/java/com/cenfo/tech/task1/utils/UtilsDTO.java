@@ -1,0 +1,37 @@
+package com.cenfo.tech.task1.utils;
+
+import com.cenfo.tech.task1.entity.Category;
+import com.cenfo.tech.task1.entity.Product;
+import com.cenfo.tech.task1.response.dto.CategoryDTO;
+import com.cenfo.tech.task1.response.dto.ProductDTO;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class UtilsDTO {
+
+    public static CategoryDTO toCategoryDTO(Category category) {
+        return CategoryDTO.builder()
+                .description(category.getDescription())
+                .name(category.getName())
+                .build();
+    }
+
+    public static ProductDTO toProductDTO(Product product) {
+        return ProductDTO.builder()
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .stockQuantity(product.getStockQuantity())
+                .category(toCategoryDTO(product.getCategory()))
+                .build();
+    }
+
+    public static List<CategoryDTO> mapCategoryListEntityToCategoryListDTO(List<Category> list) {
+        return list.stream().map(UtilsDTO::toCategoryDTO).collect(Collectors.toList());
+    }
+
+    public static List<ProductDTO> mapProductListEntityToProductListDTO(List<Product> list) {
+        return list.stream().map(UtilsDTO::toProductDTO).collect(Collectors.toList());
+    }
+}

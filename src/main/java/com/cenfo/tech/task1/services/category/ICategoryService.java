@@ -2,21 +2,20 @@ package com.cenfo.tech.task1.services.category;
 
 import com.cenfo.tech.task1.entity.Category;
 import com.cenfo.tech.task1.entity.Product;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
+import com.cenfo.tech.task1.response.dto.CategoryDTO;
+import org.springframework.data.domain.Page;
 
 public interface ICategoryService {
 
-    ResponseEntity<Category> register(Category category);
+    CategoryDTO register(Category category);
 
-    ResponseEntity<List<Category>> getAll();
+    Page<Category>  getAll(int page, int size);
 
-    ResponseEntity<List<Product>>getAllProductsByCategory(Long id);
+    Page<Product> getAllProductsByCategory(Long id, int page, int size);
 
-    ResponseEntity<Category> getById(Long id);
+    CategoryDTO getById(Long id);
 
-    ResponseEntity<Category> update(Long id, Category category);
+    CategoryDTO update(Long id, Category category);
 
     void delete(Long id);
 

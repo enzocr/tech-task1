@@ -1,4 +1,4 @@
-package com.cenfo.tech.task1.response;
+package com.cenfo.tech.task1.response.http;
 
 import lombok.Builder;
 

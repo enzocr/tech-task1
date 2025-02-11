@@ -1,18 +1,17 @@
 package com.cenfo.tech.task1.services.product;
 
 import com.cenfo.tech.task1.entity.Product;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
+import com.cenfo.tech.task1.response.dto.ProductDTO;
+import org.springframework.data.domain.Page;
 
 public interface IProductService {
-    ResponseEntity<Product> register(Product product);
+    ProductDTO register(Product product);
 
-    ResponseEntity<List<Product>> getAll();
+    Page<Product> getAll(int page, int size);
 
-    ResponseEntity<Product> getById(Long id);
+    ProductDTO getById(Long id);
 
-    ResponseEntity<Product> update(Long id, Product product);
+    ProductDTO update(Long id, Product product);
 
     void delete(Long id);
 }

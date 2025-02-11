@@ -1,5 +1,6 @@
 package com.cenfo.tech.task1.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class Category {
 
     private String description;
 
-    @JsonIgnore
+    @JsonBackReference // Prevents circular reference in JSON serialization
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Product> products;
 
