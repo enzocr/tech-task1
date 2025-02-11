@@ -27,6 +27,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request) {
+       if (ex.getMessage().contains("Page index must be 0 or greater") || ex.getMessage().contains("Page size must be at least 1")) {
+            logger.error("Invalid page/size parameters: {}", ex.getMessage(), ex);
+            return new GlobalHandlerResponse().handleResponse("Invalid page or size parameters.", HttpStatus.BAD_REQUEST, request);
+        }
+
         logger.error("Invalid argument: {}", ex.getMessage(), ex);
         return new GlobalHandlerResponse().handleResponse("An error has occurred", HttpStatus.INTERNAL_SERVER_ERROR, request);
     }

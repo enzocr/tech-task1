@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import request.RequestUpdateProduct;
 
 import java.util.Optional;
 
@@ -33,12 +34,20 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<Product> getAll(int page, int size) {
+        if (page < 0) {
+            throw new IllegalArgumentException("Page index must be 0 or greater.");
+        }
+        if (size < 1) {
+            throw new IllegalArgumentException("Page size must be at least 1.");
+        }
+
         Page<Product> productPage = productRepository.findAll(PageRequest.of(page, size));
         if (productPage.isEmpty()) {
             throw new EntityNotFoundException("No products found on page " + page + " with size " + size);
         }
         return productPage;
     }
+
 
     @Override
     public ProductDTO getById(Long id) {
@@ -49,11 +58,16 @@ public class ProductService implements IProductService {
 
     @Transactional
     @Override
-    public ProductDTO update(Long id, Product product) {
-        if (productRepository.findById(id).isPresent()) {
-            product.setId(id);
-            return UtilsDTO.toProductDTO(productRepository.save(product));
-        } else throw new EntityNotFoundException("Product not found with id: " + id);
+    public ProductDTO update(Long id, RequestUpdateProduct productNewInfo) {
+        Product productToUpdate = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+
+        productToUpdate.setName(productNewInfo.name());
+        productToUpdate.setDescription(productNewInfo.description());
+        productToUpdate.setPrice(productNewInfo.price());
+        productToUpdate.setStockQuantity(productNewInfo.stockQuantity());
+
+        return UtilsDTO.toProductDTO(productRepository.save(productToUpdate));
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import request.RequestUpdateCategory;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -55,8 +56,8 @@ public class CategoryController {
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category, HttpServletRequest request) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody RequestUpdateCategory category, HttpServletRequest request) {
         return new GlobalHandlerResponse().handleResponse(HttpStatus.OK.name(), categoryService.update(id, category), HttpStatus.OK, request);
     }
 
@@ -81,7 +82,6 @@ public class CategoryController {
                 page.getNumber() + 1,
                 page.getSize()
         );
-
         return new GlobalHandlerResponse().handleResponse(HttpStatus.OK.name(), page.getContent(), HttpStatus.OK, metaResponse, request);
     }
 

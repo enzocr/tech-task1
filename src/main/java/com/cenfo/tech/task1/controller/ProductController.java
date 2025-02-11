@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import request.RequestUpdateProduct;
 
 @RestController
 @RequestMapping("/api/products")
@@ -44,7 +45,6 @@ public class ProductController {
 
     }
 
-
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping
     @ResponseBody
@@ -54,7 +54,6 @@ public class ProductController {
             HttpServletRequest request) {
         return getPaginatedResponse(productService.getAll(page, size), request);
     }
-
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping("/{id}")
@@ -67,8 +66,8 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product, HttpServletRequest request) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody RequestUpdateProduct product, HttpServletRequest request) {
         return new GlobalHandlerResponse().handleResponse(
                 HttpStatus.OK.name(),
                 productService.update(id, product),
@@ -82,7 +81,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> getPaginatedResponse(Page<?> page, HttpServletRequest request) {
+    private ResponseEntity<?> getPaginatedResponse(Page<?> page, HttpServletRequest request) {
         if (page.isEmpty()) {
             return new GlobalHandlerResponse().handleResponse(HttpStatus.NO_CONTENT.name(), HttpStatus.OK, request);
         }
