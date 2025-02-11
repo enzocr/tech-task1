@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import request.RequestUpdateCategory;
+import request.RequestCategory;
 
 @Service
 public class CategoryService implements ICategoryService {
@@ -78,7 +78,7 @@ public class CategoryService implements ICategoryService {
 
     @Transactional
     @Override
-    public CategoryDTO update(Long id, RequestUpdateCategory categoryNewInfo) {
+    public CategoryDTO update(Long id, RequestCategory categoryNewInfo) {
         Category categoryToUpdate = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
         categoryToUpdate.setName(categoryNewInfo.name());

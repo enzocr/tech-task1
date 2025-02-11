@@ -6,12 +6,13 @@ import com.cenfo.tech.task1.response.http.GlobalHandlerResponse;
 import com.cenfo.tech.task1.response.http.MetaResponse;
 import com.cenfo.tech.task1.services.category.ICategoryService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import request.RequestUpdateCategory;
+import request.RequestCategory;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -25,8 +26,11 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<?> registerCategory(@RequestBody Category category, HttpServletRequest request) {
-        return new GlobalHandlerResponse().handleResponse(HttpStatus.CREATED.name(), categoryService.register(category), HttpStatus.OK, request);
+    public ResponseEntity<?> registerCategory(@Valid @RequestBody RequestCategory requestCategory, HttpServletRequest request) {
+        return new GlobalHandlerResponse().handleResponse(
+                HttpStatus.CREATED.name(),
+                categoryService.register(new Category(requestCategory.name(), requestCategory.description())),
+                HttpStatus.OK, request);
     }
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
@@ -57,15 +61,17 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody RequestUpdateCategory category, HttpServletRequest request) {
-        return new GlobalHandlerResponse().handleResponse(HttpStatus.OK.name(), categoryService.update(id, category), HttpStatus.OK, request);
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @Valid @RequestBody RequestCategory category, HttpServletRequest request) {
+        return new GlobalHandlerResponse().handleResponse(HttpStatus.OK.name(),
+                categoryService.update(id, category),
+                HttpStatus.OK, request);
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     private ResponseEntity<?> getPaginatedResponse(Page<?> page, HttpServletRequest request) {

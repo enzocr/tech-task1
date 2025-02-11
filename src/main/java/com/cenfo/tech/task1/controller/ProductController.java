@@ -7,6 +7,7 @@ import com.cenfo.tech.task1.response.http.MetaResponse;
 import com.cenfo.tech.task1.services.category.ICategoryService;
 import com.cenfo.tech.task1.services.product.IProductService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping
-    public ResponseEntity<?> registerProduct(@RequestBody RequestProduct requestProduct,
+    public ResponseEntity<?> registerProduct(@RequestBody @Valid RequestProduct requestProduct,
                                              HttpServletRequest request) {
         return new GlobalHandlerResponse().handleResponse(
                 HttpStatus.CREATED.name(),
@@ -62,7 +63,7 @@ public class ProductController {
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id,
-                                           @RequestBody RequestProduct requestProduct,
+                                           @Valid @RequestBody RequestProduct requestProduct,
                                            HttpServletRequest request) {
         return new GlobalHandlerResponse().handleResponse(
                 HttpStatus.OK.name(),
@@ -74,7 +75,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     private ResponseEntity<?> getPaginatedResponse(Page<?> page, HttpServletRequest request) {

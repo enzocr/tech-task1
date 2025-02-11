@@ -22,6 +22,14 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Product> products;
 
+    public Category() {
+    }
+
+    public Category(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

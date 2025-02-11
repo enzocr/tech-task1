@@ -4,7 +4,7 @@ import com.cenfo.tech.task1.entity.Category;
 import com.cenfo.tech.task1.entity.Product;
 import com.cenfo.tech.task1.response.dto.CategoryDTO;
 import org.springframework.data.domain.Page;
-import request.RequestUpdateCategory;
+import request.RequestCategory;
 
 public interface ICategoryService {
 
@@ -18,7 +18,7 @@ public interface ICategoryService {
 
     Category getById(Long id);
 
-    CategoryDTO update(Long id, RequestUpdateCategory categoryNewInfo);
+    CategoryDTO update(Long id, RequestCategory categoryNewInfo);
 
     void delete(Long id);
 

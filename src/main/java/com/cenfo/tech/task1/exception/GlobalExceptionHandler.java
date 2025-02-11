@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -25,9 +26,16 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handledMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        logger.error(ex.getMessage(), ex);
+        return new GlobalHandlerResponse().handleResponse("Invalid request data. Please check the provided fields and try again", HttpStatus.BAD_REQUEST, request);
+
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request) {
-       if (ex.getMessage().contains("Page index must be 0 or greater") || ex.getMessage().contains("Page size must be at least 1")) {
+        if (ex.getMessage().contains("Page index must be 0 or greater") || ex.getMessage().contains("Page size must be at least 1")) {
             logger.error("Invalid page/size parameters: {}", ex.getMessage(), ex);
             return new GlobalHandlerResponse().handleResponse("Invalid page or size parameters.", HttpStatus.BAD_REQUEST, request);
         }
