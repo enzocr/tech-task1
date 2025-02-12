@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import request.RequestCategory;
+import com.cenfo.tech.task1.request.RequestCategory;
 
 import java.util.List;
 
@@ -46,16 +46,13 @@ public class CategoryController {
             Category category = new Category(requestCategory.name(), requestCategory.description());
             if (requestCategory.products() != null) {
                 List<Product> products = requestCategory.products().stream()
-                        .map(productRequest -> {
-                            Product product = new Product(
-                                    productRequest.name(),
-                                    productRequest.description(),
-                                    productRequest.price(),
-                                    productRequest.stockQuantity()
-                            );
-                            product.setCategory(category);
-                            return product;
-                        })
+                        .map(requestProduct -> new Product(
+                                requestProduct.name(),
+                                requestProduct.description(),
+                                requestProduct.price(),
+                                requestProduct.stockQuantity(),
+                                category
+                        ))
                         .toList();
 
                 category.setProducts(products);

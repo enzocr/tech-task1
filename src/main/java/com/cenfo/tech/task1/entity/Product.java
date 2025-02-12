@@ -31,10 +31,12 @@ public class Product {
     public Product(@NotNull(message = "Name is required") String name,
                    @NotNull(message = "Description is required") String description,
                    @NotNull(message = "Price is required") Double price,
-                   @NotNull(message = "Stock Quantity is required") Integer integer) {
+                   @NotNull(message = "Stock Quantity is required") Integer integer,
+                   @NotNull(message = "Category is required") Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stockQuantity = integer;
+        this.category = category;
     }
 }

@@ -4,7 +4,7 @@ import com.cenfo.tech.task1.entity.Category;
 import com.cenfo.tech.task1.response.dto.CategoryDTO;
 import com.cenfo.tech.task1.response.dto.ProductDTO;
 import org.springframework.data.domain.Page;
-import request.RequestCategory;
+import com.cenfo.tech.task1.request.RequestCategory;
 
 public interface ICategoryService {
 

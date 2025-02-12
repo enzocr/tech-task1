@@ -1,4 +1,4 @@
-package request;
+package com.cenfo.tech.task1.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

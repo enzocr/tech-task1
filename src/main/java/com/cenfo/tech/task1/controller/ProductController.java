@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import request.RequestProduct;
+import com.cenfo.tech.task1.request.RequestProduct;
 
 @RestController
 @RequestMapping("/api/products")
@@ -101,12 +101,12 @@ public class ProductController {
         if (requestProduct.categoryId() != null) {
             category = categoryService.getById(requestProduct.categoryId());
         }
-        Product product = new Product();
-        product.setName(requestProduct.name());
-        product.setDescription(requestProduct.description());
-        product.setPrice(requestProduct.price());
-        product.setStockQuantity(requestProduct.stockQuantity());
-        product.setCategory(category);
-        return product;
+        return new Product(
+                requestProduct.name(),
+                requestProduct.description(),
+                requestProduct.price(),
+                requestProduct.stockQuantity(),
+                category
+        );
     }
 }

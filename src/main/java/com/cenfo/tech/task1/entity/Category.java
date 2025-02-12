@@ -29,14 +29,6 @@ public class Category {
         this.description = description;
     }
 
-    public Category(@NotNull(message = "Name is required") String name,
-                    @NotNull(message = "Description is required") String description,
-                    List<Product> products) {
-        this.name = name;
-        this.description = description;
-        this.products = products;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
