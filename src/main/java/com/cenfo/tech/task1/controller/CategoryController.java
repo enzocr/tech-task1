@@ -1,6 +1,7 @@
 package com.cenfo.tech.task1.controller;
 
 import com.cenfo.tech.task1.entity.Category;
+import com.cenfo.tech.task1.entity.Product;
 import com.cenfo.tech.task1.response.dto.CategoryDTO;
 import com.cenfo.tech.task1.response.dto.ProductDTO;
 import com.cenfo.tech.task1.response.http.GlobalHandlerResponse;
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import request.RequestCategory;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -33,6 +36,39 @@ public class CategoryController {
                 categoryService.register(new Category(requestCategory.name(), requestCategory.description())),
                 HttpStatus.OK, request);
     }
+
+
+    @PostMapping("/registerCategories")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> registerCategories(@Valid @RequestBody List<RequestCategory> requestCategories, HttpServletRequest request) {
+        for (RequestCategory requestCategory : requestCategories) {
+
+            Category category = new Category(requestCategory.name(), requestCategory.description());
+            if (requestCategory.products() != null) {
+                List<Product> products = requestCategory.products().stream()
+                        .map(productRequest -> {
+                            Product product = new Product(
+                                    productRequest.name(),
+                                    productRequest.description(),
+                                    productRequest.price(),
+                                    productRequest.stockQuantity()
+                            );
+                            product.setCategory(category);
+                            return product;
+                        })
+                        .toList();
+
+                category.setProducts(products);
+            }
+            categoryService.register(category);
+        }
+
+        return new GlobalHandlerResponse().handleResponse(
+                HttpStatus.CREATED.name(),
+                "Categories successfully registered",
+                HttpStatus.OK, request);
+    }
+
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping
@@ -91,5 +127,4 @@ public class CategoryController {
         );
         return new GlobalHandlerResponse().handleResponse(HttpStatus.OK.name(), page.getContent(), HttpStatus.OK, metaResponse, request);
     }
-
 }
