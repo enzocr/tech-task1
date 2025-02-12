@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 public interface IProductService {
     ProductDTO register(Product product);
 
-    Page<Product> getAll(int page, int size);
+    Page<ProductDTO> getAll(int page, int size);
 
     ProductDTO getById(Long id);
 

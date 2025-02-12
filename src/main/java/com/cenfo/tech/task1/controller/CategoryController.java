@@ -1,7 +1,8 @@
 package com.cenfo.tech.task1.controller;
 
 import com.cenfo.tech.task1.entity.Category;
-import com.cenfo.tech.task1.entity.Product;
+import com.cenfo.tech.task1.response.dto.CategoryDTO;
+import com.cenfo.tech.task1.response.dto.ProductDTO;
 import com.cenfo.tech.task1.response.http.GlobalHandlerResponse;
 import com.cenfo.tech.task1.response.http.MetaResponse;
 import com.cenfo.tech.task1.services.category.ICategoryService;
@@ -37,7 +38,7 @@ public class CategoryController {
     @GetMapping
     @ResponseBody
     public ResponseEntity<?> getAllCategories(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request) {
-        Page<Category> categoryPage = categoryService.getAll(page, size);
+        Page<CategoryDTO> categoryPage = categoryService.getAll(page, size);
         return getPaginatedResponse(categoryPage, request);
     }
 
@@ -55,7 +56,7 @@ public class CategoryController {
     @GetMapping("/products/{categoryId}")
     @ResponseBody
     public ResponseEntity<?> getAllProductsByCategory(@PathVariable Long categoryId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request) {
-        Page<Product> productsByCategoryPage = categoryService.getAllProductsByCategory(categoryId, page, size);
+        Page<ProductDTO> productsByCategoryPage = categoryService.getAllProductsByCategory(categoryId, page, size);
         return getPaginatedResponse(productsByCategoryPage, request);
     }
 

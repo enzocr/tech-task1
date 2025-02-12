@@ -4,6 +4,7 @@ import com.cenfo.tech.task1.entity.Category;
 import com.cenfo.tech.task1.entity.Product;
 import com.cenfo.tech.task1.repository.ICategoryRepository;
 import com.cenfo.tech.task1.response.dto.CategoryDTO;
+import com.cenfo.tech.task1.response.dto.ProductDTO;
 import com.cenfo.tech.task1.utils.UtilsDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Page<Category> getAll(int page, int size) {
+    public Page<CategoryDTO> getAll(int page, int size) {
         if (page < 0) {
             throw new IllegalArgumentException("Page index must be 0 or greater.");
         }
@@ -44,9 +45,8 @@ public class CategoryService implements ICategoryService {
         if (categoryPage.isEmpty()) {
             throw new EntityNotFoundException("No categories found on page " + page + " with size " + size);
         }
-        return categoryPage;
+        return categoryPage.map(UtilsDTO::toCategoryDTO);
     }
-
 
     @Override
     public CategoryDTO getByIdDTO(Long id) {
@@ -61,7 +61,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Page<Product> getAllProductsByCategory(Long categoryId, int page, int size) {
+    public Page<ProductDTO> getAllProductsByCategory(Long categoryId, int page, int size) {
         if (page < 0) {
             throw new IllegalArgumentException("Page index must be 0 or greater.");
         }
@@ -73,7 +73,7 @@ public class CategoryService implements ICategoryService {
         if (productPage.isEmpty()) {
             throw new EntityNotFoundException("No products found for category " + categoryId + " on page " + page + " with size " + size);
         }
-        return productPage;
+        return productPage.map(UtilsDTO::toProductDTO);
     }
 
     @Transactional
@@ -83,7 +83,7 @@ public class CategoryService implements ICategoryService {
                 .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
         categoryToUpdate.setName(categoryNewInfo.name());
         categoryToUpdate.setDescription(categoryNewInfo.description());
-        return UtilsDTO.toCategoryDTO(categoryRepository.save(categoryToUpdate));
+        return UtilsDTO.toCategoryWithNoProductsDTO(categoryRepository.save(categoryToUpdate));
     }
 
     @Override

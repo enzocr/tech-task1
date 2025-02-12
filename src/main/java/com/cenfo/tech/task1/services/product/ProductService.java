@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 public class ProductService implements IProductService {
 
@@ -32,7 +30,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> getAll(int page, int size) {
+    public Page<ProductDTO> getAll(int page, int size) {
         if (page < 0) {
             throw new IllegalArgumentException("Page index must be 0 or greater.");
         }
@@ -44,7 +42,7 @@ public class ProductService implements IProductService {
         if (productPage.isEmpty()) {
             throw new EntityNotFoundException("No products found on page " + page + " with size " + size);
         }
-        return productPage;
+        return productPage.map(UtilsDTO::toProductDTO);
     }
 
 
@@ -69,14 +67,8 @@ public class ProductService implements IProductService {
 
     @Override
     public void delete(Long id) {
-        Optional.of(productRepository.findById(id))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .ifPresentOrElse(
-                        product -> productRepository.deleteById(id),
-                        () -> {
-                            throw new EntityNotFoundException("Product not found with id: " + id);
-                        }
-                );
+        if (productRepository.findById(id).isPresent()) {
+            productRepository.deleteById(id);
+        } else throw new EntityNotFoundException("Product not found with id: " + id);
     }
 }
