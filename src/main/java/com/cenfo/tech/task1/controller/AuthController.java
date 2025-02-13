@@ -2,9 +2,11 @@ package com.cenfo.tech.task1.controller;
 
 
 import com.cenfo.tech.task1.entity.User;
+import com.cenfo.tech.task1.request.RequestUser;
 import com.cenfo.tech.task1.response.http.LogInResponse;
 import com.cenfo.tech.task1.services.security.AuthService;
 import com.cenfo.tech.task1.services.security.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/logIn")
-    public ResponseEntity<LogInResponse> authenticate(@RequestBody User user) {
-        User authenticatedUser = authService.authenticate(user.getUsername(), user.getPassword());
+    public ResponseEntity<LogInResponse> authenticate(@Valid @RequestBody RequestUser userRequest) {
+        User authenticatedUser = authService.authenticate(userRequest.email(), userRequest.password());
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LogInResponse logInResponse = LogInResponse.builder()
                 .token(jwtToken)
