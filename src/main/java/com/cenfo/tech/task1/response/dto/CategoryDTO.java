@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDTO {
+    private Long id;
     private String name;
     private String description;
     private List<ProductDTO> products;

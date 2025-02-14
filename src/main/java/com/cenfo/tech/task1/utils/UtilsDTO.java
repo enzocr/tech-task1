@@ -13,6 +13,7 @@ public class UtilsDTO {
 
     public static CategoryDTO toCategoryDTO(Category category) {
         return CategoryDTO.builder()
+                .id(category.getId())
                 .description(category.getDescription())
                 .name(category.getName())
                 .products(Optional.ofNullable(category.getProducts())
@@ -23,6 +24,7 @@ public class UtilsDTO {
 
     public static CategoryDTO toCategoryWithNoProductsDTO(Category category) {
         return CategoryDTO.builder()
+                .id(category.getId())
                 .description(category.getDescription())
                 .name(category.getName())
                 .build();
@@ -30,6 +32,7 @@ public class UtilsDTO {
 
     public static ProductDTO toProductDTO(Product product) {
         return ProductDTO.builder()
+                .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
