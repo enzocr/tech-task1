@@ -17,12 +17,10 @@ public class UserSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     private final IRoleService roleService;
     private final IUserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     public UserSeeder(IRoleService roleService, IUserService userService, PasswordEncoder passwordEncoder) {
         this.roleService = roleService;
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -63,7 +61,7 @@ public class UserSeeder implements ApplicationListener<ContextRefreshedEvent> {
         User user1 = new User();
         user1.setUsername("user1");
         user1.setEmail(USER_EMAIL);
-        user1.setPassword(passwordEncoder.encode("user123"));
+        user1.setPassword("user123");
         user1.setRole(optionalRole.get());
         userService.register(user1);
     }
@@ -80,7 +78,7 @@ public class UserSeeder implements ApplicationListener<ContextRefreshedEvent> {
         User superAdmin = new User();
         superAdmin.setUsername("super_admin");
         superAdmin.setEmail(SUPER_ADMIN_EMAIL);
-        superAdmin.setPassword(passwordEncoder.encode("super_admin123"));
+        superAdmin.setPassword("super_admin123");
         superAdmin.setRole(optionalRole.get());
         userService.register(superAdmin);
 
