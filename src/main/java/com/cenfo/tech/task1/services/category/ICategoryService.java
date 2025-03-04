@@ -6,11 +6,15 @@ import com.cenfo.tech.task1.response.dto.ProductDTO;
 import org.springframework.data.domain.Page;
 import com.cenfo.tech.task1.request.RequestCategory;
 
+import java.util.List;
+
 public interface ICategoryService {
 
     CategoryDTO register(Category category);
 
     Page<CategoryDTO> getAll(int page, int size);
+
+    List<CategoryDTO> getAll();
 
     Page<ProductDTO> getAllProductsByCategory(Long id, int page, int size);
 

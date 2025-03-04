@@ -1,6 +1,7 @@
 package com.cenfo.tech.task1.services.product;
 
 import com.cenfo.tech.task1.entity.Product;
+import com.cenfo.tech.task1.entity.User;
 import com.cenfo.tech.task1.repository.IProductRepository;
 import com.cenfo.tech.task1.response.dto.ProductDTO;
 import com.cenfo.tech.task1.utils.UtilsDTO;
@@ -30,18 +31,22 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductDTO> getAll(int page, int size) {
+    public Page<ProductDTO> getAllPaginated(int page, int size) {
         if (page < 0) {
             throw new IllegalArgumentException("Page index must be 0 or greater.");
         }
         if (size < 1) {
             throw new IllegalArgumentException("Page size must be at least 1.");
         }
+        long totalCategories = productRepository.count();
+        int maxPages = (int) Math.ceil((double) totalCategories / size);
+
+        if (page >= maxPages) {
+            page = maxPages - 1;
+        }
 
         Page<Product> productPage = productRepository.findAll(PageRequest.of(page, size));
-        if (productPage.isEmpty()) {
-            throw new EntityNotFoundException("No products found on page " + page + " with size " + size);
-        }
+
         return productPage.map(UtilsDTO::toProductDTO);
     }
 

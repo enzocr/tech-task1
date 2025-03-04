@@ -68,12 +68,23 @@ public class CategoryController {
 
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
-    @GetMapping
+    @GetMapping("/paginated")
     @ResponseBody
-    public ResponseEntity<?> getAllCategories(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request) {
+    public ResponseEntity<?> getAllCategoriesPaginated(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request) {
         Page<CategoryDTO> categoryPage = categoryService.getAll(page, size);
         return getPaginatedResponse(categoryPage, request);
     }
+
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
+    @GetMapping
+    @ResponseBody
+    public ResponseEntity<?> getAllCategories(HttpServletRequest request) {
+        return new GlobalHandlerResponse().handleResponse(
+                HttpStatus.OK.name(),
+                categoryService.getAll(),
+                HttpStatus.OK, request);
+    }
+
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @GetMapping("/{id}")
@@ -124,4 +135,5 @@ public class CategoryController {
         );
         return new GlobalHandlerResponse().handleResponse(HttpStatus.OK.name(), page.getContent(), HttpStatus.OK, metaResponse, request);
     }
+
 }

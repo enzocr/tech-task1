@@ -1,10 +1,13 @@
 package com.cenfo.tech.task1.services.user;
 
-import com.cenfo.tech.task1.entity.Role;
-import com.cenfo.tech.task1.entity.RoleEnum;
-import com.cenfo.tech.task1.entity.User;
+import com.cenfo.tech.task1.entity.*;
 import com.cenfo.tech.task1.repository.IRoleRepository;
 import com.cenfo.tech.task1.repository.IUserRepository;
+import com.cenfo.tech.task1.response.dto.UserDTO;
+import com.cenfo.tech.task1.utils.UtilsDTO;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,4 +51,25 @@ public class UserService implements IUserService {
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    @Override
+    public Page<UserDTO> getAllPaginated(int page, int size) {
+        if (page < 0) {
+            throw new IllegalArgumentException("Page index must be 0 or greater.");
+        }
+        if (size < 1) {
+            throw new IllegalArgumentException("Page size must be at least 1.");
+        }
+        long totalCategories = userRepository.count();
+        int maxPages = (int) Math.ceil((double) totalCategories / size);
+
+        if (page >= maxPages) {
+            page = maxPages - 1;
+        }
+
+        Page<User> userPage = userRepository.findAll(PageRequest.of(page, size));
+
+        return userPage.map(UtilsDTO::toUserDTO);
+    }
+
 }

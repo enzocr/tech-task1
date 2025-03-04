@@ -47,7 +47,7 @@ public class ProductController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             HttpServletRequest request) {
-        return getPaginatedResponse(productService.getAll(page, size), request);
+        return getPaginatedResponse(productService.getAllPaginated(page, size), request);
     }
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")

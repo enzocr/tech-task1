@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.cenfo.tech.task1.request.RequestCategory;
 
+import java.util.List;
+
 @Service
 public class CategoryService implements ICategoryService {
 
@@ -41,12 +43,27 @@ public class CategoryService implements ICategoryService {
             throw new IllegalArgumentException("Page size must be at least 1.");
         }
 
-        Page<Category> categoryPage = categoryRepository.findAll(PageRequest.of(page, size));
-        if (categoryPage.isEmpty()) {
-            throw new EntityNotFoundException("No categories found on page " + page + " with size " + size);
+        // Calculamos la página máxima disponible según el número total de categorías
+        long totalCategories = categoryRepository.count();
+        int maxPages = (int) Math.ceil((double) totalCategories / size);
+
+        // Si la página solicitada es mayor que la última página disponible, ajustamos a la última página
+        if (page >= maxPages) {
+            page = maxPages - 1; // Ajustar la página a la última página válida
         }
+
+        Page<Category> categoryPage = categoryRepository.findAll(PageRequest.of(page, size));
+
+        // Devolvemos la página encontrada
         return categoryPage.map(UtilsDTO::toCategoryDTO);
     }
+
+    @Override
+    public List<CategoryDTO> getAll() {
+        List<Category> categories = categoryRepository.findAll();
+        return UtilsDTO.mapCategoryListEntityToCategoryListDTO(categories);
+    }
+
 
     @Override
     public CategoryDTO getByIdDTO(Long id) {

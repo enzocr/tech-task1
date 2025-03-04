@@ -1,9 +1,7 @@
 package com.cenfo.tech.task1.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
 import java.util.List;
 
 @Entity
@@ -32,5 +30,4 @@ public class Category {
     public void setId(Long id) {
         this.id = id;
     }
-
 }
