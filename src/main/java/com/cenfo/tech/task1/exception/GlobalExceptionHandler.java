@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,6 +32,12 @@ public class GlobalExceptionHandler {
         logger.error(ex.getMessage(), ex);
         return new GlobalHandlerResponse().handleResponse("Invalid request data. Please check the provided fields and try again", HttpStatus.BAD_REQUEST, request);
 
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
+        logger.error("Bad credentials: {}", ex.getMessage());
+        return new GlobalHandlerResponse().handleResponse("Invalid credentials provided.", HttpStatus.UNAUTHORIZED, request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

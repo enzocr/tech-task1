@@ -2,7 +2,7 @@ package com.cenfo.tech.task1.controller;
 
 
 import com.cenfo.tech.task1.entity.User;
-import com.cenfo.tech.task1.request.RequestUser;
+import com.cenfo.tech.task1.request.RequestLogIn;
 import com.cenfo.tech.task1.response.http.LogInResponse;
 import com.cenfo.tech.task1.services.security.AuthService;
 import com.cenfo.tech.task1.services.security.JwtService;
@@ -26,8 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/logIn")
-    public ResponseEntity<LogInResponse> authenticate(@Valid @RequestBody RequestUser userRequest) {
-        User authenticatedUser = authService.authenticate(userRequest.email(), userRequest.password());
+    public ResponseEntity<LogInResponse> authenticate(@Valid @RequestBody RequestLogIn requestLogIn) {
+        User authenticatedUser = authService.authenticate(requestLogIn.email(), requestLogIn.password());
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LogInResponse logInResponse = LogInResponse.builder()
                 .token(jwtToken)
@@ -36,5 +36,7 @@ public class AuthController {
                 .build();
         return ResponseEntity.ok(logInResponse);
     }
+
+
 
 }

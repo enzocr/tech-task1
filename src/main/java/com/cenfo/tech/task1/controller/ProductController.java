@@ -41,9 +41,9 @@ public class ProductController {
     }
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
-    @GetMapping
+    @GetMapping("/paginated")
     @ResponseBody
-    public ResponseEntity<?> getAllProducts(
+    public ResponseEntity<?> getAllProductsPaginated(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             HttpServletRequest request) {
@@ -73,9 +73,11 @@ public class ProductController {
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id, HttpServletRequest request) {
+        return new GlobalHandlerResponse().handleResponse(
+                HttpStatus.OK.name(),
+                productService.delete(id),
+                HttpStatus.OK, request);
     }
 
     private ResponseEntity<?> getPaginatedResponse(Page<?> page, HttpServletRequest request) {

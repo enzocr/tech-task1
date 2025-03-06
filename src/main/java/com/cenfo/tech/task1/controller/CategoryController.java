@@ -114,9 +114,11 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        categoryService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id, HttpServletRequest request) {
+        return new GlobalHandlerResponse().handleResponse(
+                HttpStatus.OK.name(),
+                categoryService.delete(id),
+                HttpStatus.OK, request);
     }
 
     private ResponseEntity<?> getPaginatedResponse(Page<?> page, HttpServletRequest request) {

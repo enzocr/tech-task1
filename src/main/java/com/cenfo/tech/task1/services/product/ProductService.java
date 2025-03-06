@@ -1,13 +1,13 @@
 package com.cenfo.tech.task1.services.product;
 
 import com.cenfo.tech.task1.entity.Product;
-import com.cenfo.tech.task1.entity.User;
 import com.cenfo.tech.task1.repository.IProductRepository;
 import com.cenfo.tech.task1.response.dto.ProductDTO;
 import com.cenfo.tech.task1.utils.UtilsDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,9 +71,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void delete(Long id) {
+    public ResponseEntity<?> delete(Long id) {
         if (productRepository.findById(id).isPresent()) {
             productRepository.deleteById(id);
         } else throw new EntityNotFoundException("Product not found with id: " + id);
+        return ResponseEntity.ok("User deleted successfully");
     }
+
 }

@@ -10,7 +10,6 @@ import com.cenfo.tech.task1.response.dto.UserDTO;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UtilsDTO {
@@ -49,9 +48,10 @@ public class UtilsDTO {
 
         return UserDTO.builder()
                 .id(user.getId())
-                .username(user.getUsername())
                 .email(user.getEmail())
-                .rol(user.getRole().getName().name())
+                .name(user.getName())
+                .password(user.getPassword())
+                .role(user.getRole().getName().name())
                 .createdAt(user.getCreatedAt() != null ? formatter.format(user.getCreatedAt().toInstant()) : null)
                 .updatedAt(user.getUpdatedAt() != null ? formatter.format(user.getUpdatedAt().toInstant()) : null)
                 .build();

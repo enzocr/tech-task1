@@ -9,6 +9,7 @@ import com.cenfo.tech.task1.utils.UtilsDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.cenfo.tech.task1.request.RequestCategory;
@@ -42,19 +43,15 @@ public class CategoryService implements ICategoryService {
         if (size < 1) {
             throw new IllegalArgumentException("Page size must be at least 1.");
         }
-
-        // Calculamos la página máxima disponible según el número total de categorías
         long totalCategories = categoryRepository.count();
         int maxPages = (int) Math.ceil((double) totalCategories / size);
 
-        // Si la página solicitada es mayor que la última página disponible, ajustamos a la última página
         if (page >= maxPages) {
             page = maxPages - 1; // Ajustar la página a la última página válida
         }
 
         Page<Category> categoryPage = categoryRepository.findAll(PageRequest.of(page, size));
 
-        // Devolvemos la página encontrada
         return categoryPage.map(UtilsDTO::toCategoryDTO);
     }
 
@@ -104,9 +101,11 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public void delete(Long id) {
+    public ResponseEntity<?> delete(Long id) {
         if (categoryRepository.findById(id).isPresent()) {
             categoryRepository.deleteById(id);
         } else throw new EntityNotFoundException("Category not found with id: " + id);
+        return ResponseEntity.ok("Category deleted successfully");
     }
+
 }

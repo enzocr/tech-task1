@@ -23,6 +23,7 @@ public class SecurityConfig {
     private final String USER = "USER";
 
     private final String LOG_IN_URI = "/api/users/logIn";
+    private final String SIGN_UP_URI = "/api/users/signUp";
     private final String BASE_URI_PRODUCTS = "/api/products";
     private final String BASE_URI_CATEGORIES = "/api/categories";
 
@@ -39,7 +40,7 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(HttpMethod.POST, LOG_IN_URI).permitAll()
+                        .requestMatchers(HttpMethod.POST, LOG_IN_URI, SIGN_UP_URI).permitAll()
                         .requestMatchers(HttpMethod.POST, BASE_URI_PRODUCTS).hasRole(SUPER_ADMIN)
                         .requestMatchers(HttpMethod.PUT, BASE_URI_PRODUCTS, BASE_URI_CATEGORIES).hasRole(SUPER_ADMIN)
                         .requestMatchers(HttpMethod.DELETE, BASE_URI_PRODUCTS, BASE_URI_CATEGORIES).hasRole(SUPER_ADMIN)

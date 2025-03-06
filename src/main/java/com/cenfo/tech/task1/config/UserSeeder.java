@@ -59,11 +59,12 @@ public class UserSeeder implements ApplicationListener<ContextRefreshedEvent> {
             return;
         }
         User user1 = new User();
-        user1.setUsername("user1");
+        user1.setName("Name");
         user1.setEmail(USER_EMAIL);
         user1.setPassword("user123");
         user1.setRole(optionalRole.get());
         userService.register(user1);
+
     }
 
     private void createSuperAdmin() {
@@ -76,11 +77,11 @@ public class UserSeeder implements ApplicationListener<ContextRefreshedEvent> {
             return;
         }
         User superAdmin = new User();
-        superAdmin.setUsername("super_admin");
+        superAdmin.setName("Name");
         superAdmin.setEmail(SUPER_ADMIN_EMAIL);
         superAdmin.setPassword("super_admin123");
         superAdmin.setRole(optionalRole.get());
-        userService.register(superAdmin);
+        userService.registerAdmin(superAdmin);
 
     }
 }
